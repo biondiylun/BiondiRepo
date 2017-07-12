@@ -1,0 +1,51 @@
+const EMS = (props) => {
+	return( 
+		<div>
+			<div>	
+				{props.Description}
+			</div>
+    			<div>
+      				{props.FixValue}
+    			</div>
+		</div>
+	);
+}
+
+const EMSList = (props) => {
+	return(
+		<div>
+			{props.InfoArray.map(ems => <EMS {...ems} />)}
+		</div>
+	);
+}
+
+class GetEMSDestination extends React.Component {
+	handleSubmit = (event) => {
+		event.preventDefault();
+		axios.get(`http://teamb-fixapi.paraport.com:1043/api/v1/configuration/emsdestinations`).then(resp => {this.props.onSubmit(resp.data);});
+	};
+	render(){
+		return(
+			<form onSubmit={this.handleSubmit}>
+				<button type="submit">GetEMSDestination</button>
+			</form>
+		);
+	}
+}
+
+class App extends React.Component {
+	state = {
+		InfoArray: [
+		]
+	}
+	render() {
+		return(
+			<div>
+				<GetEMSDestination onSubmit={this.addInfo}/>
+				<EMSList InfoArray={this.state.InfoArray}/>
+			</div>
+		);
+	}
+}
+
+ReactDOM.render(<App />,mountNode);
